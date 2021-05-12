@@ -27,16 +27,15 @@ try {
     <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
 </head>
 <body>
-<h1>Hello</h1>
+
 <hr>
 <div class="form">
     <form action="add.php" name="newUser" id="newUser" method="POST">
         <fieldset>
-            <div class="mb-3">
-                <label for="disabledTextInput" class="form-label">Enter your name and lastname</label>
+            <div class="mb-6">
                 <input type="text"  class="form-control" placeholder="Enter your name and lastname">
             </div>
-            <div class="mb-3">
+            <div class="mb-6">
                 <label for="disabledSelect" class="form-label">Select you role</label>
                 <select class="form-select" >
                     <option value="1">Admin</option>
@@ -51,7 +50,7 @@ try {
 $dsn = 'mysql:host=localhost;dbname=users';
 $pdo =new PDO($dsn, 'root', 'root');
 
-$query = $pdo->query("SELECT * FROM `users`");
+$query = $pdo->query("SELECT * FROM `users` ORDER BY id ASC");
 
 ?>
 
@@ -84,11 +83,9 @@ $query = $pdo->query("SELECT * FROM `users`");
                                     <td><div class="form-check">
                                             <?php if($row['checkbox']) { ?>
                                                 <input checked class="form-check-input" type="checkbox" value=""   />
-
                                             <?php }else {?>
                                                 <input class="form-check-input" type="checkbox" value="" />
                                             <?php }?>
-
                                         </div></td>
                                     <td><?php echo $row['name'];?></td>
                                     <td> <span class="label label-default"><?php echo $row['status'];?></span></td>
@@ -118,7 +115,6 @@ $query = $pdo->query("SELECT * FROM `users`");
         </div>
     </div>
 </div>
-<button type="button" class="btn btn-primary">Add User</button>
 </body>
 </html>
 

@@ -22,33 +22,37 @@ try {
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Simple User Management System</title>
-    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
 </head>
 <body>
 <h1>Hello</h1>
 <hr>
-<h2> Add new User</h2>
-<form action="users/addUser.php" method="POST" autocomplete="off">
-    <?php if(isset($_GET['mess']) && $_GET['mess'] == 'error') { ?>
-        <input type="text" placeholder="Name and lastname are required">
-        <select class="form-select">
-            <option value="1">Admin</option>
-            <option value="2">User</option>
-        </select>
-        <button type="submit">Add User</button>
-    <?php } else {?>
-        <input type="text" placeholder="Enter your name and lastname">
-        <select class="form-select">
-            <option value="1">Admin</option>
-            <option value="2">User</option>
-        </select>
-        <button type="submit">Add User</button>
-    <?php } ?>
-</form>
+<div class="form">
+    <form action="add.php" name="newUser" id="newUser" method="POST">
+        <fieldset>
+            <div class="mb-3">
+                <label for="disabledTextInput" class="form-label">Enter your name and lastname</label>
+                <input type="text"  class="form-control" placeholder="Enter your name and lastname">
+            </div>
+            <div class="mb-3">
+                <label for="disabledSelect" class="form-label">Select you role</label>
+                <select class="form-select" >
+                    <option value="1">Admin</option>
+                    <option value="2">User</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add user</button>
+        </fieldset>
+    </form>
+</div>
 <?php
-$users = $connect->query("SELECT * FROM users");
+$dsn = 'mysql:host=localhost;dbname=users';
+$pdo =new PDO($dsn, 'root', 'root');
+
+$query = $pdo->query("SELECT * FROM `users`");
+
 ?>
 
 <div class="container bootstrap snippets bootdey">
@@ -74,11 +78,11 @@ $users = $connect->query("SELECT * FROM users");
                             </tr>
                             </thead>
                             <tbody>
-                            <?php while($user = $users->fetch(PDO::FETCH_ASSOC)) { ?>
+                            <?php while($row = $query->fetch(PDO::FETCH_ASSOC)) { ?>
                                 <tr>
-                                    <td><?php echo $user['id'];?></td>
+                                    <td><?php echo $row['id'];?></td>
                                     <td><div class="form-check">
-                                            <?php if($user['checkbox']) { ?>
+                                            <?php if($row['checkbox']) { ?>
                                                 <input checked class="form-check-input" type="checkbox" value=""   />
 
                                             <?php }else {?>
@@ -86,9 +90,9 @@ $users = $connect->query("SELECT * FROM users");
                                             <?php }?>
 
                                         </div></td>
-                                    <td><?php echo $user['name'];?></td>
-                                    <td> <span class="label label-default"><?php echo $user['status'];?></span></td>
-                                    <td><?php echo $user['role'];?></td>
+                                    <td><?php echo $row['name'];?></td>
+                                    <td> <span class="label label-default"><?php echo $row['status'];?></span></td>
+                                    <td><?php echo $row['role'];?></td>
                                     <td style="width: 20%;">
                                         <a href="#" class="table-link text-info">
                                             <span  class="fa-stack">
@@ -96,12 +100,13 @@ $users = $connect->query("SELECT * FROM users");
                                                 <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                                             </span>
                                         </a>
-                                        <a href="#" class="table-link danger" >
-                                            <span class="fa-stack" id="<?php echo $user['id']; ?>" >
+                                       <?php echo '<a href="/delete.php?id='.$row['id'].'" class="table-link danger" >
+                                            <span class="fa-stack" >
                                                 <i class="fa fa-square fa-stack-2x"></i>
                                                 <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
                                             </span>
-                                        </a>
+                                        </a>'
+                                        ?>
                                     </td>
                                 </tr>
                             <?php }?>
